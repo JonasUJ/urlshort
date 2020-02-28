@@ -56,3 +56,6 @@ __pypackages__/
 
 # Environments
 urlenv/
+
+# Visual Studio Code
+.vscode
