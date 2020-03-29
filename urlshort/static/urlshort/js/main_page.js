@@ -53,13 +53,13 @@ $(document).ready(function () {
         $("#picourl ~ .collapse").collapse("hide");
         $("#key-submit").removeClass("btn-success");
         $("#key").val("");
-        $.post(
-            "/api",
-            {
+        $.post({
+            url: "/api",
+            data: {
                 link: $("#link-input").val(),
                 urlname: $("#urlname").val(),
             },
-            (resp) => {
+            success: (resp) => {
                 switch (resp.error_code) {
                     case 0: // Success
                         hide_error();
@@ -91,12 +91,24 @@ $(document).ready(function () {
                 }
                 $("#urlname").trigger("input");
                 $("#post-btn").prop("disabled", false);
-            }
+            },
+            error: (x, t, m) => {
+                if (t == "timeout") {
+                    show_error("Serveren var for langsom om at svare")
+                } else {
+                    show_error("Der skete en ukendt fejl")
+                }
+                $("#urlname").trigger("input");
+                $("#post-btn").prop("disabled", false);
+            },
+            timeout: 8000
+        }
+
         )
     });
 
     $("#url-copy").click(() => {
-        copyToClipboard("#url-modal .modal-body")
+        copyToClipboard("#picourl")
         $("#url-copy").addClass("btn-success");
     });
 
