@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% block heading %}
+Kontakt os
+{% endblock %}
+{% endblock %}
+
+{% block content %}
+<h4 id="message" class="font-weight-normal section-link mt-5">Send en besked</h4>
+<p>
+    Hvis du vil i kontakt med os med ris, ros eller andet, kan du sende en besked til os her ved at
+    udfylde denne formular. Hvis vi sender et svar, vil det blive sendt til den email du har
+    angivet.
+</p>
+{% if success %}
+<div class="alert alert-success" role="alert">
+    Mange tak for at kontakte os, vi vender tilbage så hurtigt som muligt!
+</div>
+{% endif %}
+<form class="mt-3" enctype="multipart/form-data" action="{% url 'contact' %}" method="post">
+    {% include 'form_snippet.html' %}
+    <div class="text-right">
+        <input class="btn btn-primary" type="submit" name="submit" value="Indsend" />
+    </div>
+</form>
+<h4 id="email" class="font-weight-normal section-link mt-5">Send en email</h4>
+<p>
+    Hvis du ikke har lyst til at sende en besked her, kan du sende en email direkte til
+    <a href="mailto:{{ admin }}">{{ admin }}</a> med "Picourl" i emnet, så vil vi
+    vende tilbage så hurtigt som muligt.
+</p>
+{% endblock %}

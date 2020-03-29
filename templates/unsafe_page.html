@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% block heading %}
+Usikker picourl
+{% endblock %}
+{% endblock %}
+
+{% block content %}
+<h2 class="font-weight-normal text-center mt-5">Denne picourl er ikke sikker</h2>
+<div class="text-center">
+    <p class="lead text-center">
+        Denne picourl er blevet markeret som usikker, det vil sige at den kan indeholde virus eller at
+        dens indhold ikke er sobert.
+    </p>
+    <a class="btn btn-danger" href="{{ link }}">Fortsæt alligevel</a>
+</div>
+{% endblock %}

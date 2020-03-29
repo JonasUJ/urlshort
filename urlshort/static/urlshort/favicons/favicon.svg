@@ -1,0 +1,24 @@
+<svg width="256" height="256" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <defs>
+  <linearGradient y2="1" x2="1" y1="0" x1="0" id="svg_8">
+   <stop offset="0" stop-color="#5adf8b"/>
+   <stop offset="1" stop-color="#0E5CAD"/>
+  </linearGradient>
+  <filter id="svg_10_blur">
+   <feGaussianBlur stdDeviation="0" in="SourceGraphic"/>
+  </filter>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="258" width="258" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <rect rx="85" x="0" y="0" stroke="#ffffff" id="svg_1" height="256" width="256" stroke-width="0" fill="url(#svg_8)"/>
+  <text filter="url(#svg_10_blur)" stroke="#ffffff" transform="matrix(0.8785752116376178,0,0,0.8737952634665102,7.38858437818949,23.391260067842815) " font-style="italic" xml:space="preserve" text-anchor="start" font-family="'Trebuchet MS', Gadget, sans-serif" font-size="250" id="svg_10" y="209.472092" x="65.198457" fill-opacity="null" stroke-opacity="null" stroke-width="0" fill="#ffffff">P</text>
+ </g>
+</svg>

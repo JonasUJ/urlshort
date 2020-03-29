@@ -43,6 +43,7 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 urlshort/settings.py
+/static
 
 # Flask stuff:
 instance/
@@ -55,7 +56,7 @@ target/
 __pypackages__/
 
 # Environments
-urlenv/
+env/
 
 # Visual Studio Code
 .vscode

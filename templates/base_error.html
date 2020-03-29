@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Fejl {{ error_code }} - {{ error_msg }}
+{% endblock %}
+
+{% block heading %}
+Fejl {{ error_code }}
+{% endblock %}
+
+{% block content %}
+    <h2 class="font-weight-normal text-center mt-5">{{ error_msg }}</h2>
+    {% block specific_error %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,46 @@
+:root {
+    --theme: #2585a2;
+}
+
+html, body {
+    min-height: 100%;
+}
+
+main {
+    min-height: 100vh;
+}
+
+.bg-theme {
+    background-image: linear-gradient( 135deg, rgb(90, 223, 139) 10%, #0E5CAD 100%);
+}
+
+.top-heading {
+    overflow-wrap: break-word;
+}
+
+.section-link > .section-link-anchor {
+    color: white;
+    transition: color .15s ease-in-out;
+    text-decoration: none;
+}
+
+.section-link:hover > .section-link-anchor {
+    color: rgba(0, 123, 255, .5);
+}
+
+.section-link-anchor:hover.section-link-anchor:hover {
+    color: rgba(0, 123, 255, .9);
+}
+
+.main-text {
+    word-break: break-word;
+    hyphens: auto;
+}
+
+.main-text > h4 {
+    margin-top: 1rem;
+}
+
+.mx-auto {
+    width: -moz-min-content;
+}

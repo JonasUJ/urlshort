@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+API Dokumentation
+{% endblock %}
+
+{% block heading %}
+API Doku&shy;mentation
+{% endblock %}
+
+{% block head %}
+<link href="{% static 'urlshort/css/prism.css' %}" rel="stylesheet" />
+<link href="{% static 'urlshort/css/api_page.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<script src="{% static 'urlshort/js/prism.js' %}"></script>
+<div class="container main-text mt-5">
+    <h2 id="intro" class="font-weight-normal section-link">Intro</h2>
+    <p>
+        Picourl API’en kan bruges til at hente informationer om allerede eksisterende picourls eller
+        at oprette nye. Denne API er tilgængelig for alle og den eneste begrænsning på antal daglige
+        API-kald er den forårsaget af serverkapaciteten, vær derfor rar ikke at misbruge den :)
+    </p>
+    <h2 id="use" class="font-weight-normal section-link">Anvendelse</h2>
+    <p>
+        API’en skal kaldes med enten <code>GET</code> eller <code>POST</code> efter behov.
+        Endepunktet for API’en er denne side, men kaldes den uden nogen parametre, bliver man
+        præsenteret med dokumentationen. Alle parametre, som ikke er en del af API'en, vil blive
+        ignoreret. Da der ikke er nogen begrænsning på daglige kald, kræver API’en heller ingen
+        nøgle og den registrerer heller ikke din IP adresse andet end i interne logs, hvilke ikke er
+        permanente. <br><br> Som del af dokumentationen er der inkluderet kode eksempler, disse er
+        skrevet i Python og med brug af <code>requests</code> modulet.
+    </p>
+    <h4 id="response" class="font-weight-normal section-link">Serversvar og fejlkoder</h4>
+    <p>
+        Svar er <code>application/json</code> og de indeholder altid felterne <code>status</code> og
+        <code>error_code</code>. <code>status</code> er enten "success" eller "error". En forklaring
+        af hver fejlkode fremgår af den følgende liste:
+    </p>
+    <ul class="list-group list-group-flush d-inline-flex">
+        <li class="list-group-item">
+            <b>0</b> Der er ikke sket nogen fejl. <code>status</code> vil altid være
+            "success" når fejlkoden er 0.
+        </li>
+        <li class="list-group-item">
+            <b>1</b> Serveren kunne ikke bedømme hvad den ønskede handlig var ud fra de givne
+            parametre.
+        </li>
+        <li class="list-group-item">
+            <b>2</b> En picourl med det givne navn eksistere ikke.
+        </li>
+        <li class="list-group-item">
+            <b>3</b> En picourl med det givne navn eksistere allerede.
+        </li>
+        <li class="list-group-item">
+            <b>4</b> Det givne link er ikke gyldigt.
+        </li>
+        <li class="list-group-item">
+            <b>5</b> Serveren for det givne link svarer ikke.
+        </li>
+        <li class="list-group-item">
+            <b>6</b> Navnet til picourl'en indeholder ugyldige tegn.
+        </li>
+        <li class="list-group-item">
+            <b>7</b> Dette link er ikke tilladt, f.eks. fordi det peger på denne hjemmeside.
+        </li>
+        <li class="list-group-item">
+            <b>8</b> Den nøgle du har angivet til denne picourl passer ikke.
+        </li>
+        <li class="list-group-item">
+            <b>9</b> Den maksimale længde af parameteren "reason" blev overskredet.
+        </li>
+        <li class="list-group-item">
+            <b>10</b> Links på usikre picourls kan ikke redigeres.
+        </li>
+    </ul>
+    <p><br>Sker der en fejl, vil et eksempel på et svar se ud på følgende måde:</p>
+<pre><code class="language-json5">{
+    status: "error",
+    error_code: 2,
+    message: "url with name 'api' does not exist"
+}</code></pre>
+    <p>
+        Løkkes anmodningen derimod, vil ser sendes et svar med alle informationer om en picourl. Det
+        svar har altid samme format og se ud på følgende måde:
+    </p>
+<pre><code class="language-json5">{
+    'status': 'success',
+    'error_code': 0,
+    'short': 'https://picourl.dk/+api',
+    'link': 'https://picourl.dk/api',
+    'name': 'api',
+    'uses': 0,
+    'created_at': '2020-03-27T10:27:28.373Z',
+    'edited_at': '2020-03-27T11:27:28.370Z',
+    'key': False,
+    'safe': 2,
+    'active': {
+        'is_active': True,
+        'reason': ''
+        'deactivated_since': None,
+    }
+}</code></pre>
+    <p>En beskrivelse af hvert element fremgår af den følgende list:</p>
+    <ul class="list-group list-group-flush d-inline-flex">
+        <li class="list-group-item">
+            <b>status</b> Er enten "success" eller "error"
+        </li>
+        <li class="list-group-item">
+            <b>error_code</b> Er en af fejlkoderne beskrevet i forrige liste.
+        </li>
+        <li class="list-group-item">
+            <b>short</b> Det forkortede link som det kan tilgås fra en browser.
+        </li>
+        <li class="list-group-item">
+            <b>link</b> Den adresse som picourl'en fører til.
+        </li>
+        <li class="list-group-item">
+            <b>name</b> Navnet på denne picourl.
+        </li>
+        <li class="list-group-item">
+            <b>uses</b> Hvor mange gange denne picourl er blevet tilgået.
+        </li>
+        <li class="list-group-item">
+            <b>created_at</b> Tidspunktet for picourl'ens oprettelse.
+        </li>
+        <li class="list-group-item">
+            <b>edited_at</b> Tidspunktet for den seneste ændring i denne picourl. Er tom hvis der
+            aldrig er blevet foretaget en ændring.
+        </li>
+        <li class="list-group-item">
+            <b>key</b> Nøglen associeret med denne picourl. Er kun indkluderet ved oprettelse af en
+            picourl eller hvis nøglen er blevet ændret, ellers er den "False".
+        </li>
+        <li class="list-group-item">
+            <b>safe</b> En af 0, 1 eller 2, de svarer hhv. til "nej", "ja" og "uvist".
+        </li>
+        <li class="list-group-item">
+            <b>active</b> Om denne picourl er aktiv. Indeholder tre værdier.
+            <br>
+            <ul class="list-group list-group-flush d-inline-flex">
+                <li class="list-group-item">
+                    <b>is_active</b> Om picourl'en er aktiv
+                </li>
+                <li class="list-group-item">
+                    <b>reason</b> En begrundelse for hvorfor dens status er aktiv eller ej.
+                </li>
+                <li class="list-group-item">
+                    <b>deactivated_since</b> Tidspunktet for dens deaktivering.
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <h4 id="get" class="font-weight-normal section-link">Hent information om en picourl</h4>
+    <p>
+        For at hente informationer skal <code>urlname</code> parameteren være til stede, og den skal
+        angive navnet på den picourl der ønskes information om. Den skal sendes som en
+        <code>GET</code> anmodning. <br><br> Et eksempel på dette vises her med Python
+    </p>
+<pre><code class="language-python">import requests
+endpoint = '{{ request.scheme }}://{{ request.META.HTTP_HOST }}/api'
+parameters = { 'urlname': 'api' }
+response = requests.get(endpoint, parameters)
+response.json()['link'] # Original link, in this case "https://picourl.dk/api"
+</code></pre>
+    <h4 id="post" class="font-weight-normal section-link">Opret en ny picourl</h4>
+    <p>
+        For at oprette en ny picourl, skal der sendes en <code>POST</code> anmodning med parameteren
+        <code>link</code> der svarer til det originale link, som ønskes forkortet. Vil man også
+        gerne selv bestemme navnet kan man også sende <code>urlname</code> sammen med, hvor den er
+        det navn man ønsker. <br><br> Et eksempel med Python
+    </p>
+<pre><code class="language-python">import requests
+endpoint = '{{ request.scheme }}://{{ request.META.HTTP_HOST }}/api'
+parameters = { 'link': 'https://picourl.dk/api', 'urlname': 'api' }
+response = requests.post(endpoint, parameters)
+response.json()['short'] # Picourl, in this case "{{ request.scheme }}://{{ request.META.HTTP_HOST }}/+api"
+</code></pre>
+    <p>
+        Denne specifikke kodestump ville dog ikke virke, da en picourl med navnet "api" allerede
+        findes, svaret ville derfor have en <code>error_code</code> på 3.
+    </p>
+    <h4 id="edit" class="font-weight-normal section-link">Rediger en picourl</h4>
+    <h4 id="delete" class="font-weight-normal section-link">Slet en picourl</h4>
+</div>
+{% endblock %}
