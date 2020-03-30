@@ -28,7 +28,7 @@ def link(request, name):
         return handler404(request, 'nourl', name=name)
 
     if not url.active.is_active:
-        return render(request, 'deactivated_page.html')
+        return render(request, 'deactivated_page.html', {'reason': url.active.reason})
 
     if url.is_safe == models.SafeState.NO:
         return render(request, 'unsafe_page.html', {'link': url.link})

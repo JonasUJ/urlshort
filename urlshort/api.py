@@ -95,7 +95,7 @@ def create(request, query):
         return valid[1]
 
     if urlname_exists(query['urlname']):
-        return error(3, query["urlname"])
+        return error(3, query['urlname'])
 
     urlid = randrange(RANGE_LOWER, RANGE_UPPER)
     # pylint: disable=no-member

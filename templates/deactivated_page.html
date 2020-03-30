@@ -9,6 +9,9 @@ Deaktiveret picourl
 {% block content %}
 <h2 class="font-weight-normal text-center mt-5">Denne picourl er blevet deaktiveret</h2>
 <p class="lead text-center">
+    {% if reason %}
+        Begrundelse: {{ reason }}.
+    {% endif %}
     En deaktiveret picourl kan ikke anvendes. <a href="{% url 'main' %}">Gå til forsiden</a>
 </p>
 {% endblock %}
