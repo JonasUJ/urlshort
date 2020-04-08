@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.hashers import check_password, make_password
 
+from .link_actions import get_shortened
+
 
 class SafeState(models.IntegerChoices):
     NO = 0
@@ -30,7 +32,7 @@ class ShortUrlActive(models.Model):
 
 class ShortUrl(models.Model):
     link = models.URLField()
-    name = models.CharField(max_length=48, unique=True)
+    # name = models.CharField(max_length=48, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
     uses = models.IntegerField(default=0)
@@ -39,6 +41,10 @@ class ShortUrl(models.Model):
     urlkey = models.ForeignKey(
         ShortUrlKey, on_delete=models.CASCADE, blank=True, null=True)
     active = models.ForeignKey(ShortUrlActive, on_delete=models.CASCADE)
+
+    @property
+    def name(self):
+        return get_shortened(self.pk)
 
     def get_absolute_url(self):
         return self.link

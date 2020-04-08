@@ -13,7 +13,7 @@ from .link_actions import (
     validate_link,
     is_reachable,
     format_short,
-    get_shortened,
+    get_id,
     only_allowed_chars,
     is_picourl
 )
@@ -23,6 +23,8 @@ RANGE_UPPER = 64**URLNAME_LENGTH
 
 
 def responseFromQuery(request, query):
+    if len(query.get('urlname', '')) > 9:
+        return error(6, query['urlname'])
     if 'link' in query and request.method == 'POST':
         return create(request, query)
     elif 'key' in query and 'urlname' in query and request.method == 'POST':
@@ -66,7 +68,7 @@ def success(request, url, key=False):
 def retrieve(request, query):
     try:
         # pylint: disable=no-member
-        url = ShortUrl.objects.get(name=query['urlname'])
+        url = ShortUrl.objects.get(pk=get_id(query['urlname']))
     except ObjectDoesNotExist:
         return error(2, query["urlname"])
 
@@ -94,13 +96,15 @@ def create(request, query):
     if not valid[0]:
         return valid[1]
 
-    if urlname_exists(query['urlname']):
-        return error(3, query['urlname'])
-
-    urlid = randrange(RANGE_LOWER, RANGE_UPPER)
-    # pylint: disable=no-member
-    while ShortUrl.objects.filter(id=urlid).exists():
+    if query.get('urlname'):
+        if urlname_exists(query['urlname']):
+            return error(3, query['urlname'])
+        urlid = get_id(query['urlname'])
+    else:
         urlid = randrange(RANGE_LOWER, RANGE_UPPER)
+        # pylint: disable=no-member
+        while ShortUrl.objects.filter(id=urlid).exists():
+            urlid = randrange(RANGE_LOWER, RANGE_UPPER)
 
     active = ShortUrlActive()
     active.save()
@@ -110,20 +114,13 @@ def create(request, query):
     urlkey = ShortUrlKey.objects.create(
         keyhash=make_password(tokenkey))
 
-    name_provided = query.get('urlname', '')
-
     # pylint: disable=no-member
     url = ShortUrl.objects.create(
         pk=urlid,
         link=query['link'],
-        name=query['link'][:48] if not name_provided else query['urlname'],
         active=active,
         urlkey=urlkey
     )
-
-    if not name_provided:
-        url.name = get_shortened(url)
-        url.save()
 
     return success(request, url, tokenkey)
 
@@ -143,7 +140,7 @@ def edit(request, query):
             return valid[1]
 
     # pylint: disable=no-member
-    shorturl = ShortUrl.objects.filter(name=query['urlname'])
+    shorturl = ShortUrl.objects.filter(pk=get_id(query['urlname']))
 
     if not shorturl.exists():
         return error(2, query['urlname'])
@@ -180,7 +177,7 @@ def edit(request, query):
 
 def delete(request, query):
     # pylint: disable=no-member
-    shorturl = ShortUrl.objects.filter(name=query['urlname'])
+    shorturl = ShortUrl.objects.filter(pk=get_id(query['urlname']))
     if not shorturl.exists():
         return error(2, query['urlname'])
 
@@ -188,5 +185,7 @@ def delete(request, query):
     if not shorturl.urlkey.matches(query['key']):
         return error(8)
 
+    pk = shorturl.pk
     shorturl.delete()
+    shorturl.pk = pk
     return success(request, shorturl)

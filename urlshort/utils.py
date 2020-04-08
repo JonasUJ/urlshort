@@ -2,6 +2,7 @@ from django.core.mail import EmailMessage
 
 from .models import ShortUrl
 from .settings import EMAIL_HOST_USER
+from .link_actions import get_id
 
 
 EMAIL_CONTACT_FORMAT = """
@@ -17,7 +18,7 @@ ERRORS_API = (
     'url with name \'{}\' already exists',
     '\'{}\' is not a valid URL',
     '\'{}\' does not point to a reachable address',
-    '\'{}\' contains illegal characters',
+    '\'{}\' contains illegal characters or is too long',
     '\'{}\' is not an allowed link',
     'wrong key',
     'max length of 256 for \'reason\' exceeded',
@@ -31,7 +32,7 @@ ERRORS_HUMAN = (
     'En picourl med det navn eksistere allerede.',
     'Linket er ikke en valid URL',
     'Serveren bag linket svarer ikke',
-    'Navnet indeholder tegn der ikke er tilladte',
+    'Navnet er ikke tilladt',
     'Linket er ikke tilladt',
     'Forkert nøgle',
     'Den maksimale længde af begrundelsen er opnået',
@@ -53,4 +54,4 @@ def send_contact_email(contact_form):
 
 def urlname_exists(urlname):
     # pylint: disable=no-member
-    return ShortUrl.objects.filter(name=urlname).exists()
+    return ShortUrl.objects.filter(pk=get_id(urlname)).exists()

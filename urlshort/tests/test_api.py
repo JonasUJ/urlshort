@@ -3,6 +3,7 @@ from django.test import TestCase
 from ..settings import ALLOWED_HOSTS
 from ..api import *
 from ..models import *
+from ..link_actions import get_id
 
 
 class MockRequest:
@@ -25,8 +26,8 @@ class ApiTestCase(TestCase):
 
         # pylint: disable=no-member
         self.url = ShortUrl.objects.create(
+            pk=get_id('test'),
             link='https://example.com',
-            name='test',
             active=active,
             urlkey=urlkey
         )
@@ -143,7 +144,7 @@ class TestDelete(ApiTestCase):
     def test_delete(self):
         delete(self.request, {'urlname': 'test', 'key': 'test'})
         # pylint: disable=no-member
-        self.assertFalse(ShortUrl.objects.filter(name='test').exists())
+        self.assertFalse(ShortUrl.objects.filter(pk=get_id('test')).exists())
 
     def test_not_exists(self):
         self.assertDictEqual(

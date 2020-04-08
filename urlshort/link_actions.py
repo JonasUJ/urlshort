@@ -5,8 +5,10 @@ from urllib.parse import urlsplit
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
-from .settings import ALLOWED_HOSTS
+from .settings import ALLOWED_HOSTS, URLNAME_LENGTH
 
+ORDER = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-"
+BASE = len(ORDER)
 ALLOWED_CHARS_STRING = r'[\w\-]*'
 ALLOWED_CHARS_RE = re.compile(f'^{ALLOWED_CHARS_STRING}$')
 _PORT = r'(:\d{1,5})?'
@@ -26,8 +28,23 @@ def is_reachable(link):
     return True
 
 
-def get_shortened(url):
-    return b64encode(str(url.id).encode('utf-8'), b'-_').decode('utf-8').rstrip('=')
+def get_shortened(urlid):
+    name = ''
+    while urlid:
+        n = int(urlid % BASE)
+        urlid -= n
+        urlid /= BASE
+        name = ORDER[n] + name
+    return name
+
+
+def get_id(urlname):
+    i = len(urlname)
+    uid = 0
+    while i > 0:
+        uid += ORDER.index(urlname[-i]) * BASE**(i-1)
+        i -= 1
+    return uid
 
 
 def only_allowed_chars(name):

@@ -14,7 +14,14 @@ class LinkActionsTest(TestCase):
         assert True
 
     def test_get_shortened(self):
-        assert True
+        self.assertEqual(get_shortened(64**4), '10000')
+        self.assertEqual(get_shortened(64**5-1), '-----')
+        self.assertEqual(get_shortened(64**5/2), 'w0000')
+
+    def test_get_id(self):
+        self.assertEqual(get_id('10000'), 64**4)
+        self.assertEqual(get_id('-----'), 64**5-1)
+        self.assertEqual(get_id('w0000'), 64**5/2)
 
     def test_only_allowed_chars(self):
         self.assertTrue(only_allowed_chars(

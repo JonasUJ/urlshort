@@ -3,7 +3,7 @@ function is_valid_url(url) {
 }
 
 function has_valid_chars(name) {
-    return /^[\w\-]*$/.test(name);
+    return /^[\w\-]{0,9}$/.test(name);
 }
 
 function show_error(msg) {
@@ -79,7 +79,7 @@ $(document).ready(function () {
                         show_error("Siden kunne ikke findes");
                         break;
                     case 6:
-                        show_error("Navnet indeholder forbudte tegn");
+                        show_error("Navnet er ikke tilladt");
                         break;
                     case 7:
                         show_error("Link er ikke tilladt");

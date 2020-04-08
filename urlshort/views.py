@@ -8,7 +8,7 @@ from django.views.decorators.http import require_safe, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 
 from . import models, utils
-from .link_actions import get_urlname, is_picourl
+from .link_actions import get_urlname, is_picourl, get_id
 from .settings import EMAIL_HOST_USER, EMAIL_ADMIN_USER
 from .api import responseFromQuery, retrieve, edit, delete
 from .forms import ContactForm, LookupEditForm
@@ -23,7 +23,7 @@ def main(request):
 def link(request, name):
     try:
         # pylint: disable=no-member
-        url = models.ShortUrl.objects.get(name=name)
+        url = models.ShortUrl.objects.get(pk=get_id(name))
     except ObjectDoesNotExist:
         return handler404(request, 'nourl', name=name)
 
@@ -62,6 +62,9 @@ def about(request):
 @require_http_methods(['GET', 'POST', 'HEAD'])
 def lookup(request):
     urlname = request.GET.get('urlname')
+    if urlname:
+        if is_picourl(urlname):
+            urlname = get_urlname(urlname)
     data = {}
     error_msg = ''
     success = False
@@ -100,9 +103,6 @@ def lookup(request):
                 error_msg = utils.ERRORS_HUMAN[res['error_code']]
 
     if urlname:
-        if is_picourl(urlname):
-            urlname = get_urlname(urlname)
-
         data = retrieve(request, {'urlname': urlname})
 
         if data['error_code'] == 2:

@@ -42,7 +42,7 @@ Picourl URL Forkorter
         <div class="d-flex flex-wrap">
             <label for="urlname" class="form-control-label d-flex align-items-center text-muted p-0 mb-0">{{ request.scheme }}://{{ request.META.HTTP_HOST }}/+</label>
             <div class="d-inline-flex flex-nowrap">
-                <input id="urlname" type="text" class="form-control" placeholder="mit-link" maxlength="48" data-toggle="tooltip" data-placement="bottom" title="Kun bogstaver, tal, '-' og '_' er tilladt" />
+                <input id="urlname" type="text" class="form-control" placeholder="mit-link" maxlength="9" data-toggle="tooltip" data-placement="bottom" title="Kun bogstaver, tal, '_' og '-' er tilladt. Må kun være 1 til 9 tegn." />
                 <div class="d-inline-flex align-items-center relative icon-div">
                     <div id="urlname-spinner" class="spinner-border spinner-border-sm justify-content-center align-items-center" role="status" aria-hidden="true"></div>
                     <span id="urlname-check" data-toggle="tooltip" title="Ledigt">{% octicon "check" height="24" fill="var(--success)" %}</span>
