@@ -73,7 +73,7 @@ $(document).ready(function () {
                         show_error("Det navn er allerede taget");
                         break;
                     case 4:
-                        show_error("URL er ikke valid");
+                        show_error("URL er ikke valid (glemte du https:// ?)");
                         break;
                     case 5:
                         show_error("Siden kunne ikke findes");

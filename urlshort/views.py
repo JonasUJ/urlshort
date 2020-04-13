@@ -8,7 +8,7 @@ from django.views.decorators.http import require_safe, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 
 from . import models, utils
-from .link_actions import get_urlname, is_picourl, get_id
+from .link_actions import get_urlname, is_picourl, get_id, only_allowed_chars
 from .settings import EMAIL_HOST_USER, EMAIL_ADMIN_USER
 from .api import responseFromQuery, retrieve, edit, delete
 from .forms import ContactForm, LookupEditForm
@@ -22,6 +22,8 @@ def main(request):
 @require_safe
 def link(request, name):
     try:
+        if len(name) > 9 or not only_allowed_chars(name):
+            return handler404(request, 'invalid', name=name)
         # pylint: disable=no-member
         url = models.ShortUrl.objects.get(pk=get_id(name))
     except ObjectDoesNotExist:
@@ -39,12 +41,12 @@ def link(request, name):
 
 
 @csrf_exempt
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(['GET', 'POST', 'DELETE'])
 def api(request):
-    query = request.GET or request.POST
+    query = request.GET or request.POST or request.DELETE
     if query:
         return JsonResponse(responseFromQuery(request, query.dict()))
-    elif request.method == 'POST' and request.body:
+    elif request.method in ('POST', 'DELETE') and request.body:
         try:
             query = json.loads(request.body)
         except json.JSONDecodeError:
@@ -103,6 +105,9 @@ def lookup(request):
                 error_msg = utils.ERRORS_HUMAN[res['error_code']]
 
     if urlname:
+        if len(urlname) > 9 or not only_allowed_chars(urlname):
+            return handler404(request, 'invalid', name=urlname)
+
         data = retrieve(request, {'urlname': urlname})
 
         if data['error_code'] == 2:
@@ -112,7 +117,7 @@ def lookup(request):
             request.POST or None,
             request.FILES or None,
             initial={
-                'link': data['link'] if data['active']['is_active'] else '',
+                'link': data['link'],
                 'antal_besøg': data['uses'],
                 'oprettet': data['created_at'],
                 'redigeret': data.get('edited_at', ''),

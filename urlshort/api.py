@@ -27,10 +27,10 @@ def responseFromQuery(request, query):
         return error(6, query['urlname'])
     if 'link' in query and request.method == 'POST':
         return create(request, query)
-    elif 'key' in query and 'urlname' in query and request.method == 'POST':
-        if 'delete' in query:
+    elif 'key' in query and 'urlname' in query:
+        if request.method == 'DELETE':
             return delete(request, query)
-        elif 'active' in query or 'newlink' in query or 'newkey' in query:
+        elif any(map(query.__contains__, ('active', 'newlink', 'newkey'))) and request.method == 'POST':
             return edit(request, query)
     elif 'urlname' in query and request.method == 'GET':
         return retrieve(request, query)
@@ -50,7 +50,7 @@ def success(request, url, key=False):
         'status': 'success',
         'error_code': 0,
         'name': url.name,
-        'link': url.link,
+        'link': url.link if url.active.is_active else '',
         'short': format_short(request, url.name),
         'created_at': url.created_at,
         'edited_at': url.edited_at,
