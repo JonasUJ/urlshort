@@ -43,7 +43,7 @@ def link(request, name):
 @csrf_exempt
 @require_http_methods(['GET', 'POST', 'DELETE'])
 def api(request):
-    query = request.GET or request.POST or request.DELETE
+    query = request.GET or request.POST
     if query:
         return JsonResponse(responseFromQuery(request, query.dict()))
     elif request.method in ('POST', 'DELETE') and request.body:
