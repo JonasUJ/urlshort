@@ -10,9 +10,29 @@ from .settings_public import *
 SECRET_KEY = ''
 
 if DEBUG:
-    ALLOWED_HOSTS = ['']
+    ALLOWED_HOSTS = ['127.0.0.1']
 else:
-    ALLOWED_HOSTS = ['']
+    ALLOWED_HOSTS = ['127.0.0.1']
+
+# Logging configuration
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': f'/var/log/django/urlshort/debug.log',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     },
+# }
 
 # Email config
 EMAIL_USE_TLS = True
