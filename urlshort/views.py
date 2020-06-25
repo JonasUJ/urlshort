@@ -137,10 +137,7 @@ def contact(request):
     form = ContactForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
         if form.is_valid():
-            try:
-                utils.send_contact_email(form)
-            except Exception:
-                return handler500(request)
+            utils.send_contact_email(form)
             success = True
 
     return render(request, 'contact_page.html', {

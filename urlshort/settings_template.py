@@ -46,3 +46,7 @@ EMAIL_ADMIN_USER = 'admin@example.com'
 
 # VirusTotal
 VIRUSTOTAL_API_KEY = ''
+
+# reCAPTChA
+RECAPTCHA_PUBLIC_KEY = ''
+RECAPTCHA_PRIVATE_KEY = ''

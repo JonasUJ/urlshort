@@ -1,4 +1,5 @@
 from django import forms
+from captcha.fields import ReCaptchaField
 
 
 class ContactForm(forms.Form):
@@ -6,6 +7,7 @@ class ContactForm(forms.Form):
     email = forms.EmailField(help_text='Din e-mailadresse bliver kun delt internt', widget=forms.EmailInput(attrs={'class': 'form-control'}))
     emne = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
     besked = forms.CharField(max_length=2400, widget=forms.Textarea(attrs={'class': 'form-control'}))
+    captcha = ReCaptchaField()
 
 
 class LookupEditForm(forms.Form):
